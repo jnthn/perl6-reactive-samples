@@ -19,7 +19,7 @@ Supply.interval(1).schedule_on(
     $elapsed.text = "Elapsed: $secs seconds";
 });
 
-$source.changed.unchanged(1).start({
+$source.changed.stable(1).start({
     (try EVAL .text) // $!.message
 }).migrate.schedule_on(GTK::Simple::Scheduler).tap(
     { $results.text = $_ }
