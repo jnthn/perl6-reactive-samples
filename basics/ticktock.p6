@@ -1,4 +1,6 @@
-my $ticker   = Supply.interval(1);
-my $ticktock = $ticker.map({ $_ % 2 ?? 'tock' !! 'tick' });
-$ticktock.tap(&say);
-sleep 5;
+react {
+    whenever Supply.interval(1) -> $i {
+        done if $i == 10;
+        say $i %% 2 ?? 'tick' !! 'tock';
+    }
+}
