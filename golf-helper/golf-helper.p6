@@ -25,11 +25,32 @@ supply {
         $elapsed.text = "Elapsed: $secs seconds";
     }
 
-    sub run-code($source) {
-        (try EVAL $source.text) // $!.message
+    # Runs the provided code by spawing a Perl 6 process. Kills it if the
+    # Supply returned here is closed.
+    sub run-perl6($source) {
+        supply {
+            my $perl6 = Proc::Async.new($*EXECUTABLE, '-e', $source.text);
+            my $output = '';
+            whenever $perl6.stdout {
+                $output ~= $_;
+            }
+            whenever $perl6.stderr {
+                $output ~= $_;
+            }
+            whenever $perl6.start {
+                emit $output;
+                done;
+            }
+            whenever Promise.in(10) {
+                $output ~= 'Timeout; killed after 10s';
+                emit $output;
+                done;
+            }
+            CLOSE $perl6.?kill;
+        }
     }
 
-    whenever on-ui($source.changed.stable(1).start(&run-code).migrate) -> $output {
+    whenever on-ui($source.changed.stable(1).map(&run-perl6).migrate) -> $output {
         $results.text = $output
     }
 }.tap;
