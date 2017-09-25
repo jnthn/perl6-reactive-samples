@@ -9,7 +9,7 @@ multi sub MAIN('watch') {
     react {
         my $change-id = 0;
 
-        whenever IO::Notification.watch-path('.git/logs/HEAD') {
+        whenever '.git/logs/HEAD'.IO.watch {
             for dir('.inter-commit') {
                 unlink($_);
             }
@@ -17,7 +17,7 @@ multi sub MAIN('watch') {
             say "HEAD moved; cleared backups";
         }
 
-        whenever IO::Notification.watch-path('.').unique(:as(*.path), :expires(1)) {
+        whenever '.'.IO.watch.unique(:as(*.path), :expires(1)) {
             my $path = .path;
             next if $path eq '.inter-commit' | '.git';
             $change-id++;
