@@ -1,8 +1,10 @@
 use GTK::Simple;
+use GTK::Simple::App;
+use MONKEY-SEE-NO-EVAL;
 
 my $app = GTK::Simple::App.new(title => 'Code Golf Assistant!');
 
-$app.set_content(GTK::Simple::VBox.new(
+$app.set-content(GTK::Simple::VBox.new(
     my $source  = GTK::Simple::TextView.new(),
     my $chars   = GTK::Simple::Label.new(text => 'Characters: 0'),
     my $elapsed = GTK::Simple::Label.new(),
@@ -13,7 +15,7 @@ $source.changed.tap({
     $chars.text = "Characters: $source.text.chars()";
 });
 
-Supply.interval(1).schedule_on(
+Supply.interval(1).schedule-on(
     GTK::Simple::Scheduler
 ).tap(-> $secs {
     $elapsed.text = "Elapsed: $secs seconds";
@@ -21,7 +23,7 @@ Supply.interval(1).schedule_on(
 
 $source.changed.stable(1).start({
     (try EVAL .text) // $!.message
-}).migrate.schedule_on(GTK::Simple::Scheduler).tap(
+}).migrate.schedule-on(GTK::Simple::Scheduler).tap(
     { $results.text = $_ }
 );
 

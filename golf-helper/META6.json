@@ -1,0 +1,13 @@
+{
+    "perl"          : "6.*",
+    "name"          : "Sample::App::GolfHelper",
+    "version"       : "0.1",
+    "description"   : "Code golf helper example app",
+    "author"        : "Jonathan Worthington <jnthn@jnthn.net>",
+    "license"       : "Artistic-2.0",
+    "depends"       : [ "GTK::Simple" ],
+    "provides"      : {
+        "golf-helper.p6" : "golf-helper.p6"
+    },
+    "source-url"    : "git://github.com/jnthn/perl6-reactive-samples.git"
+}
